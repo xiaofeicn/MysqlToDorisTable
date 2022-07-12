@@ -1,8 +1,8 @@
 mysql_config = {
     "host": '',
     "port": 3306,
-    "user": 'ttk_saas',
-    "password": 'ttk_saas8888@',
+    "user": '',
+    "password": '@',
     "db": 'ttk_saas',
     "charset": 'utf8'
 }
