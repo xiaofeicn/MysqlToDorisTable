@@ -28,7 +28,7 @@ class MysqlToDoris(object):
         for sync_table in sync_tables:
             database_name = sync_table[0]
             table_name = sync_table[1]
-            # print(database_name, table_name)
+            print(database_name, table_name)
             sql = '''select COLUMN_NAME,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,COLUMN_TYPE,COLUMN_KEY,COLUMN_COMMENT from information_schema.columns where table_schema ='{}' and table_name ='{}' '''.format(
                 database_name, table_name)
             table_desc = self.mysql_db.select(sql)
@@ -39,7 +39,6 @@ class MysqlToDoris(object):
             # 索引
             MUL = []
             COLUMN_List = []
-            COLUMN_List_HEADE = []
             for col in table_desc:
                 COLUMN_NAME = str(col[0])
                 DATA_TYPE = str(col[1])
@@ -65,15 +64,8 @@ class MysqlToDoris(object):
                 if COLUMN_KEY != 'PRI':
                     AGGR_TYPE = "REPLACE"
                 COL_ = ''' `{}` {} COMMENT '{}' '''.format(COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT)
-                if COLUMN_NAME == 'id' or COLUMN_NAME == 'aid':
-                    COLUMN_List.insert(0, col)
-                elif COLUMN_NAME == 'create_time':
-                    COLUMN_List.insert(1, col)
-                elif COLUMN_NAME == 'update_time':
 
-                    COLUMN_List.insert(2, col)
-                else:
-                    COLUMN_List.append(COL_)
+                COLUMN_List.append(COL_)
             cols = ','.join(COLUMN_List)
             pri_keys = ''
             head = 'CREATE TABLE IF NOT EXISTS {}.{} ('.format(database_name, table_name)
